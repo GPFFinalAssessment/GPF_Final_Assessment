@@ -16,14 +16,23 @@ namespace GPF_Final_Assessment
     /// </summary>
     public class Game1 : Game
     {
+        enum GameState { PAUSE, PLAY }
         GraphicsDeviceManager graphics;
         SpriteBatch spriteBatch;
+        Background background;
+        Player player;
+        Texture2D backTexture;
+        Texture2D playerTexture;
+        float secondsToComplete = 10;
+        GameState gameState = GameState.PAUSE;
 
         public Game1()
-            : base()
         {
             graphics = new GraphicsDeviceManager(this);
             Content.RootDirectory = "Content";
+            graphics.IsFullScreen = false;
+            graphics.PreferredBackBufferHeight = 680;
+            graphics.PreferredBackBufferWidth = 1100;
         }
 
         /// <summary>
@@ -49,6 +58,13 @@ namespace GPF_Final_Assessment
             spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
+
+            backTexture = Content.Load<Texture2D>("ui_background");
+            background = new Background(backTexture, new Vector2(0, 0), secondsToComplete);
+            playerTexture = Content.Load<Texture2D>("player_blue");
+            player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+
+
         }
 
         /// <summary>
@@ -71,10 +87,37 @@ namespace GPF_Final_Assessment
                 Exit();
 
             // TODO: Add your update logic here
+            switch (gameState)
+            {
+                case GameState.PAUSE:
+                    PauseUpdate(gameTime);
+                    break;
+                default:
+                    PlayUpdate(gameTime);
+                    break;
+            }
 
             base.Update(gameTime);
         }
 
+        public void PauseUpdate(GameTime gameTime)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                gameState = GameState.PLAY;
+        }
+
+
+        public void PlayUpdate(GameTime gameTime)
+        {
+            if (Keyboard.GetState().IsKeyDown(Keys.Space))
+                gameState = GameState.PAUSE;
+            else
+            {
+                background.Update(gameTime);
+                player.Update(gameTime, graphics);
+            }
+
+        }
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -82,9 +125,15 @@ namespace GPF_Final_Assessment
         protected override void Draw(GameTime gameTime)
         {
             GraphicsDevice.Clear(Color.CornflowerBlue);
+            spriteBatch.Begin();
 
             // TODO: Add your drawing code here
 
+            //draw background
+            background.Draw(spriteBatch);
+            player.Draw(spriteBatch);
+            
+            spriteBatch.End();
             base.Draw(gameTime);
         }
     }
