@@ -1,4 +1,4 @@
-﻿#region Using Statements
+#region Using Statements
 using System;
 using System.Collections.Generic;
 using Microsoft.Xna.Framework;
@@ -16,15 +16,28 @@ namespace GPF_Final_Assessment
     /// </summary>
     public class Game1 : Game
     {
+		GraphicsDeviceManager graphics;
+		SpriteBatch spriteBatch;
+		//=============================================================
+		//GameState
         enum GameState { PAUSE, PLAY }
-        GraphicsDeviceManager graphics;
-        SpriteBatch spriteBatch;
+		GameState gameState = GameState.PAUSE;
+		//=============================================================
+
+
+		//=============================================================
+		//Background.
         Background background;
-        Player player;
         Texture2D backTexture;
-        Texture2D playerTexture;
-        float secondsToComplete = 10;
-        GameState gameState = GameState.PAUSE;
+		float secondsToComplete = 10;
+		//=============================================================
+
+
+		//=============================================================
+		//Player
+		Player player;
+		Texture2D playerTexture;
+		//=============================================================
 
         public Game1()
         {
@@ -59,10 +72,18 @@ namespace GPF_Final_Assessment
 
             // TODO: use this.Content to load your game content here
 
+			//=============================================================
+			//Background Texturing
             backTexture = Content.Load<Texture2D>("ui_background");
             background = new Background(backTexture, new Vector2(0, 0), secondsToComplete);
+			//=============================================================
+
+
+			//=============================================================
+			//Player Texturing
             playerTexture = Content.Load<Texture2D>("player_blue");
             player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+			//=============================================================
 
 
         }
@@ -87,6 +108,9 @@ namespace GPF_Final_Assessment
                 Exit();
 
             // TODO: Add your update logic here
+
+			//=============================================================
+			//Gamestate Update
             switch (gameState)
             {
                 case GameState.PAUSE:
@@ -97,16 +121,25 @@ namespace GPF_Final_Assessment
                     break;
             }
 
+			//=============================================================
+
             base.Update(gameTime);
         }
 
+
+		//=============================================================
+		//Paused Game State Update
         public void PauseUpdate(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 gameState = GameState.PLAY;
         }
+		//=============================================================
 
 
+
+		//=============================================================
+		//InGame Game state Update
         public void PlayUpdate(GameTime gameTime)
         {
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
@@ -118,6 +151,11 @@ namespace GPF_Final_Assessment
             }
 
         }
+		//=============================================================
+
+
+
+
         /// <summary>
         /// This is called when the game should draw itself.
         /// </summary>
@@ -129,10 +167,19 @@ namespace GPF_Final_Assessment
 
             // TODO: Add your drawing code here
 
+			//=============================================================
             //draw background
             background.Draw(spriteBatch);
+			//=============================================================
+
+
+
+			//=============================================================
+			//Draw Player
             player.Draw(spriteBatch);
-            
+			//=============================================================
+
+
             spriteBatch.End();
             base.Draw(gameTime);
         }
