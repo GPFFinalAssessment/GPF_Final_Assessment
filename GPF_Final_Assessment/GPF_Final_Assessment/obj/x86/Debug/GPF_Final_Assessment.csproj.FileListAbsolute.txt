@@ -10,3 +10,12 @@ C:\Users\XC7846\documents\visual studio 2010\Projects\GPF_Final_Assessment\GPF_F
 C:\Users\XC7846\documents\visual studio 2010\Projects\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Debug\GPF_Final_Assessment.csprojResolveAssemblyReference.cache
 C:\Users\XC7846\documents\visual studio 2010\Projects\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\ui_background.png
 C:\Users\XC7846\documents\visual studio 2010\Projects\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\player_blue.png
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\player_blue.png
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\ui_background.png
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\GPF_Final_Assessment.exe
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\GPF_Final_Assessment.pdb
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Debug\GPF_Final_Assessment.csprojResolveAssemblyReference.cache
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Debug\GPF_Final_Assessment.exe
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Debug\GPF_Final_Assessment.pdb
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\font.xnb
+C:\Users\Shaun\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\button.png

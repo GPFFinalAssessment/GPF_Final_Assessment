@@ -1,0 +1,15 @@
+﻿<Properties>
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug|x86" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="GPF_Final_Assessment\Timer.cs">
+    <Files>
+      <File FileName="GPF_Final_Assessment\Timer.cs" Line="16" Column="5" />
+      <File FileName="GPF_Final_Assessment\Game1.cs" Line="43" Column="10" />
+      <File FileName="GPF_Final_Assessment\GUIControls.cs" Line="113" Column="4" />
+      <File FileName="GPF_Final_Assessment\Player.cs" Line="25" Column="41" />
+    </Files>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+</Properties>
