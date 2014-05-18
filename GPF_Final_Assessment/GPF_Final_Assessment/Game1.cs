@@ -18,37 +18,48 @@ namespace GPF_Final_Assessment
 	{
 		GraphicsDeviceManager graphics;
 		SpriteBatch spriteBatch;
+
 		//=============================================================
 		//GameState
 		public enum GameState { PAUSE, PLAY, MENU }
 		public GameState gameState = GameState.MENU;
 		//=============================================================
 
-
 		//=============================================================
 		//Menu GUI
 		GUIControls GUI;
 		//=============================================================
-
-
+        
 		//=============================================================
 		//Background.
 		Background background;
 		Texture2D backTexture;
-		float secondsToComplete = 10;
+		float secondsToComplete = 60;
+        float scrollSpeed = 50;
 		//=============================================================
-
-
+        
 		//=============================================================
 		//Timer
 		//=============================================================
-
-
+        
 		//=============================================================
 		//Player
 		Player player;
 		Texture2D playerTexture;
 		//=============================================================
+        
+        //=============================================================
+        //Enemies and Obstacles
+        Texture2D enemyTexture;
+        Texture2D obstacleTexture;
+        List<Enemy> enemies = new List<Enemy>();
+        List<Obstacle> obstacles = new List<Obstacle>();
+        float enemyspawntime = 5.0f;
+        float enemyspawncooldown = 0.0f;
+        float obstaclespawntime = 12.0f;
+        float obstaclespawncooldown = 0.0f;
+        Random rand = new Random();
+        //=============================================================
 
 		public Game1()
 		{
@@ -89,7 +100,7 @@ namespace GPF_Final_Assessment
 			//=============================================================
 			//Background Texturing
 			backTexture = Content.Load<Texture2D>("ui_background");
-			background = new Background(backTexture, new Vector2(0, 0), secondsToComplete);
+			background = new Background(backTexture, new Vector2(0, 0), secondsToComplete, scrollSpeed);
 			//=============================================================
 
 			//=============================================================
@@ -104,7 +115,11 @@ namespace GPF_Final_Assessment
 			player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
 			//=============================================================
 
-
+            //=============================================================
+            //Enemy and Obstacle Texture
+            enemyTexture = Content.Load<Texture2D>("enemy");
+            obstacleTexture = Content.Load<Texture2D>("obstacle");
+            //=============================================================
 		}
 
 		/// <summary>
@@ -132,22 +147,20 @@ namespace GPF_Final_Assessment
 			//Gamestate Update
 			switch (gameState)
 			{
-			case GameState.PAUSE:
-				PauseUpdate(gameTime);
-				break;
-			case GameState.MENU:
-				MenuUpdate (gameTime);
-				break;
-			default:
-				PlayUpdate(gameTime);
-				break;
+			    case GameState.PAUSE:
+				    PauseUpdate(gameTime);
+				    break;
+			    case GameState.MENU:
+				    MenuUpdate (gameTime);
+				    break;
+			    default:
+				    PlayUpdate(gameTime);
+				    break;
 			}
-
 			//=============================================================
 
 			base.Update(gameTime);
 		}
-
 
 		//=============================================================
 		//Paused Game State Update
@@ -161,9 +174,9 @@ namespace GPF_Final_Assessment
 
 		//=============================================================
 		//Menu Game State Update
-		public void MenuUpdate(GameTime gametime)
+        public void MenuUpdate(GameTime gameTime)
 		{
-			GUI.UpdateCollision(gametime);
+            GUI.UpdateCollision(gameTime);
 		}
 
 		//=============================================================
@@ -177,15 +190,51 @@ namespace GPF_Final_Assessment
 				gameState = GameState.PAUSE;
 			else
 			{
-				background.Update(gameTime);
-				player.Update(gameTime, graphics);
+                int intHaltMovement = CollisionWithObstacles();
+
+                if(!background.IsEnd())
+                    player.Update(gameTime, graphics, intHaltMovement);
+
+                if (intHaltMovement != 1)
+                {
+                    background.Update(gameTime);
+
+                    enemyspawncooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (enemyspawncooldown < 0.0f)
+                    {
+                        SpawnEnemy();
+                        enemyspawncooldown = enemyspawntime;
+                    }
+
+                    for (int i = enemies.Count - 1; i >= 0; i--)
+                    {
+                        enemies[i].Update(gameTime);
+
+                        if (enemies[i].enemyposition.X < -graphics.PreferredBackBufferWidth)
+                            enemies.RemoveAt(i);
+                    }
+
+                    obstaclespawncooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (obstaclespawncooldown < 0.0f)
+                    {
+                        SpawnObstacle();
+                        obstaclespawncooldown = obstaclespawntime;
+                    }
+
+                    for (int i = obstacles.Count - 1; i >= 0; i--)
+                    {
+                        obstacles[i].Update(gameTime);
+
+                        if (obstacles[i].obstaclePosition.X < -graphics.PreferredBackBufferWidth)
+                            obstacles.RemoveAt(i);
+                    }
+
+                    CollisionsWithEnemy();
+                }
 			}
 
 		}
 		//=============================================================
-
-
-
 
 		/// <summary>
 		/// This is called when the game should draw itself.
@@ -200,54 +249,50 @@ namespace GPF_Final_Assessment
 			//=============================================================
 			//Gamestate Update
 			switch (gameState) {
-			case GameState.PAUSE:
-				PauseDraw(gameTime);
-				break;
-			case GameState.MENU:
-				MenuDraw (gameTime);
-				break;
-			default:
-				PlayDraw (gameTime);
-				break;
+			    case GameState.PAUSE:
+				    PauseDraw(gameTime);
+				    break;
+			    case GameState.MENU:
+				    MenuDraw (gameTime);
+				    break;
+			    default:
+				    PlayDraw (gameTime);
+				    break;
 			}
 
 			base.Draw(gameTime);
 
 		}
-
 		//=============================================================
 
 		//=============================================================
 		//Menu Game State Update
-		public void MenuDraw(GameTime gametime)
+        public void MenuDraw(GameTime gameTime)
 		{
 			spriteBatch.Begin ();
 
 			//Draw Menu
-			GUI.DrawButton(spriteBatch);
-
+            GUI.DrawButton(spriteBatch);
 
 			spriteBatch.End();
 		}
-
 		//=============================================================
 
 		//=============================================================
 		//Menu Game State Update
-		public void PauseDraw(GameTime gametime)
+        public void PauseDraw(GameTime gameTime)
 		{
 			spriteBatch.Begin ();
 
 
 			spriteBatch.End();
 		}
-
 		//=============================================================
 
 
 		//=============================================================
 		//Menu Game State Update
-		public void PlayDraw(GameTime gametime)
+        public void PlayDraw(GameTime gameTime)
 		{
 			spriteBatch.Begin ();
 
@@ -255,11 +300,82 @@ namespace GPF_Final_Assessment
 			background.Draw(spriteBatch);
 
 			//Draw Player
-			player.Draw(spriteBatch);
+            player.Draw(spriteBatch);
+
+            for (int i = 0; i < enemies.Count; i++)
+            {
+                enemies[i].Draw(gameTime, spriteBatch);
+            }
+
+            for (int i = 0; i < obstacles.Count; i++)
+            {
+                obstacles[i].Draw(gameTime, spriteBatch);
+            }
 
 			spriteBatch.End();
 		}
 
 		//=============================================================
+
+        void SpawnObstacle()
+        {
+            int randomLane = rand.Next(1, 4);
+            float oPos = (randomLane * Obstacle.obstaclePlacementSpace) + Obstacle.obstaclePlacementOffset;
+            Obstacle o = new Obstacle(obstacleTexture, new Vector2(graphics.PreferredBackBufferWidth, oPos), scrollSpeed);
+            obstacles.Add(o);
+        }
+
+        void SpawnEnemy()
+        {
+            float randomX = rand.Next(1150, 1150);
+            float randomY = rand.Next(120, 600);
+            Enemy e = new Enemy(enemyTexture, new Vector2(randomX, randomY), scrollSpeed);
+            enemies.Add(e);
+        }
+
+        void CollisionsWithEnemy()
+        {
+            Rectangle playerRect = new Rectangle((int)player.offsetposition.X, (int)player.offsetposition.Y, player.texture.Width, player.texture.Height);
+
+            for (int i = enemies.Count - 1; i >= 0; i--)
+            {
+                Rectangle enemiesRect = new Rectangle((int)(enemies[i].enemyoffsetposition.X), (int)(enemies[i].enemyoffsetposition.Y), enemies[i].enemyTexture.Width, enemies[i].enemyTexture.Height);
+                
+                if (Rectangle.Intersect(playerRect, enemiesRect) != Rectangle.Empty)
+                {
+                    enemies.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
+        //if we collide with an obstacle all movement halts until the player has moved around it
+        public int CollisionWithObstacles()
+        {
+            Rectangle intersectRect;
+
+            Rectangle playerRect = new Rectangle((int)player.offsetposition.X, (int)player.offsetposition.Y, player.texture.Width, player.texture.Height);
+
+            for (int i = obstacles.Count - 1; i >= 0; i--)
+            {
+                Rectangle obstaclesRect = new Rectangle((int)(obstacles[i].obstacleOffsetPosition.X), (int)(obstacles[i].obstacleOffsetPosition.Y), obstacles[i].obstacleTexture.Width, obstacles[i].obstacleTexture.Height);
+
+                intersectRect = Rectangle.Intersect(playerRect, obstaclesRect);
+                if (intersectRect != Rectangle.Empty)
+                {
+                    //we have an intersection...will this cause a problem for the player moving forward (1)? Or just up (2)/down(3)?                    
+				    if (intersectRect.Right == playerRect.Right && intersectRect.Width <= Math.Abs(player.movementSpeed))
+                        return 1;
+                    else if(intersectRect.Top == playerRect.Top)
+                        return 2;
+                    else if(intersectRect.Bottom == playerRect.Bottom)
+                        return 3;
+                    else
+                        return 0;
+                }
+            }
+
+            return 0;
+        }
 	}
 }

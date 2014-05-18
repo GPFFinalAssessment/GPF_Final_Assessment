@@ -14,18 +14,20 @@ namespace GPF_Final_Assessment
         public Texture2D backgroundTexture;
         public Vector2 backgroundPosition;
         public double backgroundPixelsToFinishScreen;
+        public float backgroundNumberOfScreens;
         public float backgroundScrollSpeed;
         public float pixelsPassed;
         
-        public Background(Texture2D texture, Vector2 pos, float secondsToFinish)
+        public Background(Texture2D texture, Vector2 pos, float secondsToFinish, float scrollSpeed)
         {
             backgroundTexture = texture;
             backgroundPosition = pos;
-            backgroundScrollSpeed = 50;
+            backgroundScrollSpeed = scrollSpeed;
             pixelsPassed = 0;
 
             //calculate how many screens we need to display by the number of seconds at regular speed
-            backgroundPixelsToFinishScreen = Math.Ceiling((secondsToFinish / backgroundScrollSpeed) * backgroundTexture.Width);
+            backgroundPixelsToFinishScreen = secondsToFinish * backgroundScrollSpeed;
+            backgroundNumberOfScreens = (float)(backgroundPixelsToFinishScreen / backgroundTexture.Width);
         }
 
         public void Update(GameTime gameTime)

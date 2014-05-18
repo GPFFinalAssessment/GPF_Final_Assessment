@@ -9,12 +9,8 @@
 //
 //namespace GPF_Final_Assessment
 //{
-//
-//
-//
 //	public class Timer
 //	{
-//
 //		//=================================================================
 //		//TIMER CODE
 //		public int TimerBegin = 0;
@@ -26,7 +22,6 @@
 //			this.TimerBegin = TimerBegin;
 //		}
 //
-//
 //		//=================================================================
 //		//TIMER CODE
 //		public void GameTimer(GameTime gameTime)
@@ -34,8 +29,6 @@
 //			TimerBegin += (int)gameTime.ElapsedGameTime.TotalSeconds;
 //		}
 //		//=================================================================
-//
-//
 //	}
 //}
 //

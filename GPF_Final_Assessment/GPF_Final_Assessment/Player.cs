@@ -10,6 +10,7 @@ namespace GPF_Final_Assessment
     {
         public Texture2D texture;
         public Vector2 position;
+        public Vector2 offsetposition;
         public Game1 game;
         public float movementSpeed;
         
@@ -20,12 +21,12 @@ namespace GPF_Final_Assessment
             this.movementSpeed = 2f;
         }
 
-        public void Update(GameTime gametime, GraphicsDeviceManager gdManager)
+        public void Update(GameTime gametime, GraphicsDeviceManager gdManager, int haltMovement)
         {
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) && position.Y > 120) position.Y -= movementSpeed;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down) && (position.Y < (gdManager.PreferredBackBufferHeight - movementSpeed - this.texture.Height))) position.Y += movementSpeed;
-            //if (Keyboard.GetState().IsKeyDown(Keys.A)) position.X -= 0.5f;
-            //if (Keyboard.GetState().IsKeyDown(Keys.D)) position.X += 0.5f;
+            Vector2 offset = new Vector2(texture.Width / 2, 0);
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && position.Y > 120 && haltMovement != 2) position.Y -= movementSpeed;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && (position.Y < (gdManager.PreferredBackBufferHeight - movementSpeed - this.texture.Height)) && haltMovement != 3) position.Y += movementSpeed;
+            offsetposition = position - offset;
         }
 
         public void Draw(SpriteBatch spritebatch)
