@@ -12,13 +12,17 @@ namespace GPF_Final_Assessment
         public Vector2 position;
         public Vector2 offsetposition;
         public Game1 game;
+        public float defaultSpeed;
         public float movementSpeed;
+        public float playerHealth;
         
         public Player(Texture2D texture, Vector2 pos)
         {
             this.texture = texture;
             this.position = pos;
-            this.movementSpeed = 2f;
+            this.defaultSpeed = 2f;
+            this.movementSpeed = defaultSpeed;
+            this.playerHealth = 100;
         }
 
         public void Update(GameTime gametime, GraphicsDeviceManager gdManager, int haltMovement)
@@ -29,10 +33,37 @@ namespace GPF_Final_Assessment
             offsetposition = position - offset;
         }
 
-        public void Draw(SpriteBatch spritebatch)
+        public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
             Vector2 offset = new Vector2(texture.Width / 2, 0);
+
             spritebatch.Draw(texture, position - offset, Color.White);
+        }
+
+        public void UpdateHealth(int intPoints, bool bolIncrease)
+        {
+            if (bolIncrease)
+            {
+                playerHealth += intPoints;
+
+                if (playerHealth > 100)
+                    playerHealth = 100;
+            }
+            else
+            {
+                playerHealth -= intPoints;
+
+                if (playerHealth < 0)
+                    playerHealth = 0;
+            }         
+        }
+
+        public bool isAlive()
+        {
+            if(playerHealth > 0)
+                return true;
+            else
+                return false;
         }
     }
 }

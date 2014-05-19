@@ -34,3 +34,4 @@ C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_F
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Debug\GPF_Final_Assessment.csprojResolveAssemblyReference.cache
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\enemy.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\obstacle.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\char_runsheet.png

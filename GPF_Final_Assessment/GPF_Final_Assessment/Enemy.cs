@@ -11,6 +11,7 @@ namespace GPF_Final_Assessment
         public Texture2D enemyTexture;
         public Vector2 enemyposition;
         public Vector2 enemyoffsetposition;
+        public float enemyDefaultSpeed;
         public float enemyScrollSpeed;
         public Game1 game;
 
@@ -19,7 +20,8 @@ namespace GPF_Final_Assessment
             this.enemyTexture = texture;
             this.enemyposition = position;
             //we need to calculate the speed of the enemy movement for the same speed of the background
-            this.enemyScrollSpeed = speed / 60;
+            this.enemyDefaultSpeed = speed / 60;
+            this.enemyScrollSpeed = enemyDefaultSpeed;
         }
 
         public void Update(GameTime gameTime)

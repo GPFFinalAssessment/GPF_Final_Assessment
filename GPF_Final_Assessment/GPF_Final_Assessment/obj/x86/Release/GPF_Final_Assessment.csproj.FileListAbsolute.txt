@@ -1,0 +1,16 @@
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\char_runsheet.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\enemy.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\obstacle.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\player_blue.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\ui_background.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\font.xnb
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\button.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\GPF_Final_Assessment.exe
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\GPF_Final_Assessment.pdb
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Lidgren.Network.dll
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\MonoGame.Framework.dll
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\OpenTK.dll
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Tao.Sdl.dll
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Release\GPF_Final_Assessment.csprojResolveAssemblyReference.cache
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Release\GPF_Final_Assessment.exe
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\obj\x86\Release\GPF_Final_Assessment.pdb

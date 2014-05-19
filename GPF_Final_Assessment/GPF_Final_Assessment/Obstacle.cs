@@ -11,6 +11,7 @@ namespace GPF_Final_Assessment
         public Texture2D obstacleTexture;
         public Vector2 obstaclePosition;
         public Vector2 obstacleOffsetPosition;
+        public float obstacleDefaultSpeed;
         public float obstacleScrollSpeed;
         public static int obstaclePlacementSpace = 130;
         public static int obstaclePlacementOffset = 60;
@@ -19,8 +20,9 @@ namespace GPF_Final_Assessment
         {
             this.obstacleTexture = texture;
             this.obstaclePosition = position;
-            //we need to calculate the speed of the obstacle movement for the same speed of the background
-            this.obstacleScrollSpeed = speed / 60;
+            //we need to calculate the speed of the enemy movement for the same speed of the background
+            this.obstacleDefaultSpeed = speed / 60;
+            this.obstacleScrollSpeed = obstacleDefaultSpeed;
         }
 
         public void Update(GameTime gameTime)

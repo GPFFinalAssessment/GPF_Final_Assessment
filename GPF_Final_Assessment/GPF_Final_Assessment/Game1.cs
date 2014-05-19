@@ -34,8 +34,9 @@ namespace GPF_Final_Assessment
 		//Background.
 		Background background;
 		Texture2D backTexture;
-		float secondsToComplete = 60;
-        float scrollSpeed = 50;
+        float secondsToComplete = 60;
+        float defaultSpeed = 50;
+        float scrollSpeed;
 		//=============================================================
         
 		//=============================================================
@@ -96,6 +97,7 @@ namespace GPF_Final_Assessment
 			spriteBatch = new SpriteBatch(GraphicsDevice);
 
 			// TODO: use this.Content to load your game content here
+            scrollSpeed = defaultSpeed;
 
 			//=============================================================
 			//Background Texturing
@@ -190,6 +192,8 @@ namespace GPF_Final_Assessment
 				gameState = GameState.PAUSE;
 			else
 			{
+                UpdateSpeed();
+
                 int intHaltMovement = CollisionWithObstacles();
 
                 if(!background.IsEnd())
@@ -300,7 +304,7 @@ namespace GPF_Final_Assessment
 			background.Draw(spriteBatch);
 
 			//Draw Player
-            player.Draw(spriteBatch);
+            player.Draw(spriteBatch, gameTime);
 
             for (int i = 0; i < enemies.Count; i++)
             {
@@ -321,7 +325,8 @@ namespace GPF_Final_Assessment
         {
             int randomLane = rand.Next(1, 4);
             float oPos = (randomLane * Obstacle.obstaclePlacementSpace) + Obstacle.obstaclePlacementOffset;
-            Obstacle o = new Obstacle(obstacleTexture, new Vector2(graphics.PreferredBackBufferWidth, oPos), scrollSpeed);
+            Obstacle o = new Obstacle(obstacleTexture, new Vector2(graphics.PreferredBackBufferWidth, oPos), defaultSpeed);
+            o.obstacleScrollSpeed = scrollSpeed;
             obstacles.Add(o);
         }
 
@@ -329,7 +334,8 @@ namespace GPF_Final_Assessment
         {
             float randomX = rand.Next(1150, 1150);
             float randomY = rand.Next(120, 600);
-            Enemy e = new Enemy(enemyTexture, new Vector2(randomX, randomY), scrollSpeed);
+            Enemy e = new Enemy(enemyTexture, new Vector2(randomX, randomY), defaultSpeed);
+            e.enemyScrollSpeed = scrollSpeed;
             enemies.Add(e);
         }
 
@@ -343,7 +349,9 @@ namespace GPF_Final_Assessment
                 
                 if (Rectangle.Intersect(playerRect, enemiesRect) != Rectangle.Empty)
                 {
+                    //this should have hurt our player...take away 5 points
                     enemies.RemoveAt(i);
+                    player.UpdateHealth(10, false);
                     break;
                 }
             }
@@ -376,6 +384,26 @@ namespace GPF_Final_Assessment
             }
 
             return 0;
+        }
+
+        public void UpdateSpeed()
+        {
+            //need to set all speeds based on current health
+            float currHealth = (float)(player.playerHealth / 100);
+
+            //but don't make them go less than 25% speed
+            if (currHealth < 0.25)
+                currHealth = 0.25f;
+
+            scrollSpeed = defaultSpeed * currHealth;
+            player.movementSpeed = player.defaultSpeed * currHealth;
+            background.backgroundScrollSpeed = scrollSpeed;
+
+            for (int i = enemies.Count - 1; i >= 0; i--)
+                enemies[i].enemyScrollSpeed = enemies[i].enemyDefaultSpeed * currHealth;
+
+            for (int i = obstacles.Count - 1; i >= 0; i--)
+                obstacles[i].obstacleScrollSpeed = obstacles[i].obstacleDefaultSpeed * currHealth;
         }
 	}
 }
