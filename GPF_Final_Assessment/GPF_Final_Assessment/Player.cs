@@ -15,15 +15,21 @@ namespace GPF_Final_Assessment
         public float playerDefaultSpeed;
         public float playerMovementSpeed;
         public float playerHealth;
+        public int playerScore;
+        public int playerWifi;
+        public int playerWifiNeeded;        
         
-        public Player(Texture2D texture, Vector2 pos)
+        public Player(Texture2D texture, Vector2 pos, int WifiNeeded)
         {
             this.playerTexture = texture;
             this.playerPosition = pos;
             this.playerDefaultSpeed = 2f;
             this.playerMovementSpeed = playerDefaultSpeed;
             this.playerHealth = 100;
-            this.playerOffset = new Vector2(playerTexture.Width / 2, 0); 
+            this.playerOffset = new Vector2(playerTexture.Width / 2, 0);
+            this.playerScore = 0;
+            this.playerWifi = 0;
+            this.playerWifiNeeded = WifiNeeded;
         }
 
         public void Update(GameTime gametime, GraphicsDeviceManager gdManager, int haltMovement)

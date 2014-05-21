@@ -47,6 +47,10 @@ namespace GPF_Final_Assessment
 		//Player
 		Player player;
 		Texture2D playerTexture;
+        Texture2D healthTexture;
+        Texture2D wifiHudTexture;
+        Texture2D[] scoreTextures = new Texture2D[10];
+        int WifiNeeded = 5;
 		//=============================================================
         
         //=============================================================
@@ -127,7 +131,11 @@ namespace GPF_Final_Assessment
 			//=============================================================
 			//Player Texturing
 			playerTexture = Content.Load<Texture2D>("player_blue");
-			player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2));
+			player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), WifiNeeded);
+            healthTexture = Content.Load<Texture2D>("health");
+            wifiHudTexture = Content.Load<Texture2D>("wifi_hud");
+            for (var i = 0; i < 10; i++)
+                scoreTextures[i] = Content.Load<Texture2D>("hud_" + i.ToString());
 			//=============================================================
 
             //=============================================================
@@ -271,6 +279,7 @@ namespace GPF_Final_Assessment
                     }
 
                     CollisionsWithEnemy();
+                    CollisionsWithCollectables();
                 }
 			}
 
@@ -343,6 +352,9 @@ namespace GPF_Final_Assessment
 			//Draw Player
             player.Draw(spriteBatch, gameTime);
 
+            //Draw HUD
+            DrawHUD();
+
             for (int i = 0; i < enemies.Count; i++)
             {
                 enemies[i].Draw(gameTime, spriteBatch);
@@ -397,13 +409,13 @@ namespace GPF_Final_Assessment
                     randTexture = collectPointsTexture;
                     break;
                 case 2:
-                    randTexture = collectHPSmlTexture;
+                    randTexture = collectWifiTexture;
                     break;
                 case 3:
-                    randTexture = collectHPLgeTexture;
+                    randTexture = collectHPSmlTexture;
                     break;
                 case 4:
-                    randTexture = collectWifiTexture;
+                    randTexture = collectHPLgeTexture;
                     break;
             }
 
@@ -459,6 +471,44 @@ namespace GPF_Final_Assessment
             return 0;
         }
 
+        void CollisionsWithCollectables()
+        {
+            Rectangle playerRect = new Rectangle((int)player.playerOffsetPosition.X, (int)player.playerOffsetPosition.Y, player.playerTexture.Width, player.playerTexture.Height);
+
+            for (int i = collectables.Count - 1; i >= 0; i--)
+            {
+                Rectangle collectRect = new Rectangle((int)(collectables[i].collectOffsetPosition.X), (int)(collectables[i].collectOffsetPosition.Y), collectables[i].collectTexture.Width, collectables[i].collectTexture.Height);
+
+                if (Rectangle.Intersect(playerRect, collectRect) != Rectangle.Empty)
+                {
+                    //figure out what this does for our player
+                    switch (collectables[i].collectType)
+                    {
+                        case Collectable.CollectType.BIKE:
+
+                            break;
+                        case Collectable.CollectType.HPLGE:                           
+                            player.UpdateHealth(50, true);
+                            break;
+                        case Collectable.CollectType.HPSML:
+                            player.UpdateHealth(20, true);
+                            break;
+                        case Collectable.CollectType.WIFI:
+                            player.playerWifi += 1;
+                            break;
+                        default:
+                            //assume points!
+                            player.playerScore += 25;
+                            break;
+
+                    }
+
+                    collectables.RemoveAt(i);
+                    break;
+                }
+            }
+        }
+
         public void UpdateSpeed()
         {
             //need to set all speeds based on current health
@@ -481,5 +531,35 @@ namespace GPF_Final_Assessment
             for (int i = collectables.Count - 1; i >= 0; i--)
                 collectables[i].collectScrollSpeed = collectables[i].collectDefaultSpeed * currHealth;
         }
+
+        public void DrawHUD()
+        {
+            float intPosLeft = 12;
+            float intScorePosX = intPosLeft;
+            float intScorePosY = 60;
+
+            //draw healthbar
+            float currHealth = (float)(player.playerHealth / 100);
+            int intWidth = (int)Math.Ceiling((decimal)((healthTexture.Width - 32) * currHealth)) + 32;
+            spriteBatch.Draw(healthTexture, new Vector2(12, 20), new Rectangle(0, 0, intWidth, 32), Color.White);
+
+            //draw score 
+            char[] ScoreValues = player.playerScore.ToString().ToCharArray();
+            foreach (char s in ScoreValues)
+            {
+                int intChar = Convert.ToInt16(s.ToString());
+
+                //draw each char after the other
+                spriteBatch.Draw(scoreTextures[intChar], new Vector2(intScorePosX, intScorePosY), Color.White);
+                intScorePosX += scoreTextures[intChar].Width;
+            }
+
+            //draw wifi status
+            spriteBatch.Draw(wifiHudTexture, new Vector2(intPosLeft, 105), Color.White);
+            spriteBatch.Draw(scoreTextures[player.playerWifi], new Vector2(intPosLeft + wifiHudTexture.Width + 5, 105), Color.White);
+
+            //draw game timer
+        }
+
 	}
 }

@@ -15,7 +15,7 @@ namespace GPF_Final_Assessment
         public float collectDefaultSpeed;
         public float collectScrollSpeed;
         public CollectType collectType;
-        public enum CollectType { BIKE, POINTS, HPLGE, HPSML, WIFI };
+        public enum CollectType { BIKE, POINTS, WIFI, HPSML, HPLGE };
         
         public Collectable(Texture2D texture, Vector2 position, float speed, int type)
         {
