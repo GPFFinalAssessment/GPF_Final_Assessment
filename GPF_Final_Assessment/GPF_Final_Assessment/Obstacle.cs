@@ -15,7 +15,7 @@ namespace GPF_Final_Assessment
         public float obstacleDefaultSpeed;
         public float obstacleScrollSpeed;
         public static int obstaclePlacementSpace = 130;
-        public static int obstaclePlacementOffset = 60;
+        public static int obstaclePlacementOffset = 80;
 
         public Obstacle(Texture2D texture, Vector2 position, float speed)
         {

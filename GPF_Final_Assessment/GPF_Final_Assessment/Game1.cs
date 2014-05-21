@@ -379,24 +379,44 @@ namespace GPF_Final_Assessment
         {
             int randomLane = rand.Next(1, 4);
             float oPos = (randomLane * Obstacle.obstaclePlacementSpace) + Obstacle.obstaclePlacementOffset;
-            Obstacle o = new Obstacle(obstacleTexture, new Vector2(graphics.PreferredBackBufferWidth, oPos), defaultSpeed);
+            Vector2 offset = new Vector2(obstacleTexture.Width, obstacleTexture.Height) / 2.0f;
+            Vector2 Pos = new Vector2(graphics.PreferredBackBufferWidth + 100, oPos) - offset;
+
+            if (CollisionCheckForSpawn(Pos, obstacleTexture.Width, obstacleTexture.Height))
+            {
+                randomLane = rand.Next(1, 4);
+                Pos.Y = ((randomLane * Obstacle.obstaclePlacementSpace) + Obstacle.obstaclePlacementOffset) - offset.Y;
+
+                while (CollisionCheckForSpawn(Pos, obstacleTexture.Width, obstacleTexture.Height))
+                {
+                    if ((Pos.Y + 10) < (600 - offset.Y))
+                        Pos.Y += 10;
+                    else
+                        Pos.Y = 150 - offset.Y;
+                }
+            }
+
+            Obstacle o = new Obstacle(obstacleTexture, new Vector2(Pos.X, Pos.Y), defaultSpeed);
             o.obstacleScrollSpeed = scrollSpeed;
             obstacles.Add(o);
         }
 
         void SpawnEnemy()
         {
-            float randomX = rand.Next(1150, 1150);
-            float randomY = rand.Next(120, 600);
-            Enemy e = new Enemy(enemyTexture, new Vector2(randomX, randomY), defaultSpeed);
+            float randomY = rand.Next(150, 600);
+            Vector2 offset = new Vector2(enemyTexture.Width, enemyTexture.Height) / 2.0f;
+            Vector2 Pos = new Vector2(graphics.PreferredBackBufferWidth + 100, randomY) - offset;
+
+            while (CollisionCheckForSpawn(Pos, enemyTexture.Width, enemyTexture.Height))
+                Pos.Y = rand.Next(150, 600) - offset.Y;
+
+            Enemy e = new Enemy(enemyTexture, new Vector2(Pos.X, Pos.Y), defaultSpeed);
             e.enemyScrollSpeed = scrollSpeed;
             enemies.Add(e);
         }
 
         void SpawnCollectable()
         {
-            float randomX = rand.Next(1150, 1150);
-            float randomY = rand.Next(120, 600);
             int randType = rand.Next(0, 4);
             Texture2D randTexture = collectWifiTexture;
 
@@ -419,7 +439,14 @@ namespace GPF_Final_Assessment
                     break;
             }
 
-            Collectable c = new Collectable(randTexture, new Vector2(randomX, randomY), defaultSpeed, randType);
+            float randomY = rand.Next(150, 600);
+            Vector2 offset = new Vector2(randTexture.Width, randTexture.Height) / 2.0f;
+            Vector2 Pos = new Vector2(graphics.PreferredBackBufferWidth + 100, randomY) - offset;
+
+            while (CollisionCheckForSpawn(Pos, randTexture.Width, randTexture.Height))
+                Pos.Y = rand.Next(150, 600) - offset.Y;
+
+            Collectable c = new Collectable(randTexture, new Vector2(Pos.X, Pos.Y), defaultSpeed, randType);
             c.collectScrollSpeed = scrollSpeed;
             collectables.Add(c);
         }
@@ -507,6 +534,39 @@ namespace GPF_Final_Assessment
                     break;
                 }
             }
+        }
+
+        //we need to run a full collision check here to make sure the placement is okay for the next item to spawn
+        public bool CollisionCheckForSpawn(Vector2 Pos, int Width, int Height)
+        {
+            //we want to make sure there's nothing that the new item will hit within 5px of it
+            Rectangle newRect = new Rectangle((int)Pos.X - 5, (int)Pos.Y - 5, Width + 5, Height + 5);
+            
+            for (int i = enemies.Count - 1; i >= 0; i--)
+            {
+                Rectangle enemiesRect = new Rectangle((int)(enemies[i].enemyOffsetPosition.X), (int)(enemies[i].enemyOffsetPosition.Y), enemies[i].enemyTexture.Width, enemies[i].enemyTexture.Height);
+
+                if (Rectangle.Intersect(newRect, enemiesRect) != Rectangle.Empty)
+                    return true;
+            }
+
+            for (int i = obstacles.Count - 1; i >= 0; i--)
+            {
+                Rectangle obstaclesRect = new Rectangle((int)(obstacles[i].obstacleOffsetPosition.X), (int)(obstacles[i].obstacleOffsetPosition.Y), obstacles[i].obstacleTexture.Width, obstacles[i].obstacleTexture.Height);
+
+                if (Rectangle.Intersect(newRect, obstaclesRect) != Rectangle.Empty)
+                    return true;
+            }
+
+            for (int i = collectables.Count - 1; i >= 0; i--)
+            {
+                Rectangle collectablesRect = new Rectangle((int)(collectables[i].collectOffsetPosition.X), (int)(collectables[i].collectOffsetPosition.Y), collectables[i].collectTexture.Width, collectables[i].collectTexture.Height);
+
+                if (Rectangle.Intersect(newRect, collectablesRect) != Rectangle.Empty)
+                    return true;
+            }
+
+            return false;
         }
 
         public void UpdateSpeed()
