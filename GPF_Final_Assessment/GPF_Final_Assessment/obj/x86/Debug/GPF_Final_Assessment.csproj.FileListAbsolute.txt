@@ -35,3 +35,8 @@ C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_F
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\enemy.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\obstacle.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\char_runsheet.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\bike.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\coffee32.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\coffee64.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\points.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Debug\Content\wifi.png

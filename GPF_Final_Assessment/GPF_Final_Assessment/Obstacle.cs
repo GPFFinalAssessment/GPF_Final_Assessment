@@ -10,6 +10,7 @@ namespace GPF_Final_Assessment
     {
         public Texture2D obstacleTexture;
         public Vector2 obstaclePosition;
+        public Vector2 obstacleOffset;
         public Vector2 obstacleOffsetPosition;
         public float obstacleDefaultSpeed;
         public float obstacleScrollSpeed;
@@ -23,20 +24,19 @@ namespace GPF_Final_Assessment
             //we need to calculate the speed of the enemy movement for the same speed of the background
             this.obstacleDefaultSpeed = speed / 60;
             this.obstacleScrollSpeed = obstacleDefaultSpeed;
+            this.obstacleOffset = new Vector2(obstacleTexture.Width, obstacleTexture.Height) / 2.0f;
         }
 
         public void Update(GameTime gameTime)
         {
             //we need to add some gravity here!
-            Vector2 offset = new Vector2(obstacleTexture.Width, obstacleTexture.Height) / 2.0f;
             obstaclePosition.X -= obstacleScrollSpeed;
-            obstacleOffsetPosition = obstaclePosition - offset;
+            obstacleOffsetPosition = obstaclePosition - obstacleOffset;
         }
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            Vector2 offset = new Vector2(obstacleTexture.Width, obstacleTexture.Height) / 2.0f;
-            spriteBatch.Draw(obstacleTexture, obstaclePosition - offset, Color.White);
+            spriteBatch.Draw(obstacleTexture, obstaclePosition - obstacleOffset, Color.White);
         }
     }
 }

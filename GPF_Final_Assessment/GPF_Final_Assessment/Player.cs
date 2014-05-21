@@ -8,36 +8,34 @@ namespace GPF_Final_Assessment
 {
     public class Player
     {
-        public Texture2D texture;
-        public Vector2 position;
-        public Vector2 offsetposition;
-        public Game1 game;
-        public float defaultSpeed;
-        public float movementSpeed;
+        public Texture2D playerTexture;
+        public Vector2 playerPosition;
+        public Vector2 playerOffset;
+        public Vector2 playerOffsetPosition;
+        public float playerDefaultSpeed;
+        public float playerMovementSpeed;
         public float playerHealth;
         
         public Player(Texture2D texture, Vector2 pos)
         {
-            this.texture = texture;
-            this.position = pos;
-            this.defaultSpeed = 2f;
-            this.movementSpeed = defaultSpeed;
+            this.playerTexture = texture;
+            this.playerPosition = pos;
+            this.playerDefaultSpeed = 2f;
+            this.playerMovementSpeed = playerDefaultSpeed;
             this.playerHealth = 100;
+            this.playerOffset = new Vector2(playerTexture.Width / 2, 0); 
         }
 
         public void Update(GameTime gametime, GraphicsDeviceManager gdManager, int haltMovement)
         {
-            Vector2 offset = new Vector2(texture.Width / 2, 0);
-            if (Keyboard.GetState().IsKeyDown(Keys.Up) && position.Y > 120 && haltMovement != 2) position.Y -= movementSpeed;
-            if (Keyboard.GetState().IsKeyDown(Keys.Down) && (position.Y < (gdManager.PreferredBackBufferHeight - movementSpeed - this.texture.Height)) && haltMovement != 3) position.Y += movementSpeed;
-            offsetposition = position - offset;
+            if (Keyboard.GetState().IsKeyDown(Keys.Up) && playerPosition.Y > 120 && haltMovement != 2) playerPosition.Y -= playerMovementSpeed;
+            if (Keyboard.GetState().IsKeyDown(Keys.Down) && (playerPosition.Y < (gdManager.PreferredBackBufferHeight - playerMovementSpeed - this.playerTexture.Height)) && haltMovement != 3) playerPosition.Y += playerMovementSpeed;
+            playerOffsetPosition = playerPosition - playerOffset;
         }
 
         public void Draw(SpriteBatch spritebatch, GameTime gameTime)
         {
-            Vector2 offset = new Vector2(texture.Width / 2, 0);
-
-            spritebatch.Draw(texture, position - offset, Color.White);
+            spritebatch.Draw(playerTexture, playerPosition - playerOffset, Color.White);
         }
 
         public void UpdateHealth(int intPoints, bool bolIncrease)

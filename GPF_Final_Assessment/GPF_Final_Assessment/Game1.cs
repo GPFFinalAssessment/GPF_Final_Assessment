@@ -62,6 +62,19 @@ namespace GPF_Final_Assessment
         Random rand = new Random();
         //=============================================================
 
+        
+        //=============================================================
+        //Collectables
+        List<Collectable> collectables = new List<Collectable>(); 
+        Texture2D collectWifiTexture;
+        Texture2D collectPointsTexture;
+        Texture2D collectHPLgeTexture;
+        Texture2D collectHPSmlTexture;
+        Texture2D collectBikeTexture;
+        float collectspawntime = 5.0f;
+        float collectspawncooldown = 0.0f;
+        //=============================================================
+
 		public Game1()
 		{
 			graphics = new GraphicsDeviceManager(this);
@@ -121,6 +134,15 @@ namespace GPF_Final_Assessment
             //Enemy and Obstacle Texture
             enemyTexture = Content.Load<Texture2D>("enemy");
             obstacleTexture = Content.Load<Texture2D>("obstacle");
+            //=============================================================
+
+            //=============================================================
+            //Collectable Texture
+            collectWifiTexture = Content.Load<Texture2D>("wifi");
+            collectPointsTexture = Content.Load<Texture2D>("points");
+            collectHPLgeTexture = Content.Load<Texture2D>("coffee64");
+            collectHPSmlTexture = Content.Load<Texture2D>("coffee32");
+            collectBikeTexture = Content.Load<Texture2D>("bike");
             //=============================================================
 		}
 
@@ -214,7 +236,7 @@ namespace GPF_Final_Assessment
                     {
                         enemies[i].Update(gameTime);
 
-                        if (enemies[i].enemyposition.X < -graphics.PreferredBackBufferWidth)
+                        if (enemies[i].enemyPosition.X < -graphics.PreferredBackBufferWidth)
                             enemies.RemoveAt(i);
                     }
 
@@ -231,6 +253,21 @@ namespace GPF_Final_Assessment
 
                         if (obstacles[i].obstaclePosition.X < -graphics.PreferredBackBufferWidth)
                             obstacles.RemoveAt(i);
+                    }
+
+                    collectspawncooldown -= (float)gameTime.ElapsedGameTime.TotalSeconds;
+                    if (collectspawncooldown < 0.0f)
+                    {
+                        SpawnCollectable();
+                        collectspawncooldown = collectspawntime;
+                    }
+
+                    for (int i = collectables.Count - 1; i >= 0; i--)
+                    {
+                        collectables[i].Update(gameTime);
+
+                        if (collectables[i].collectPosition.X < -graphics.PreferredBackBufferWidth)
+                            collectables.RemoveAt(i);
                     }
 
                     CollisionsWithEnemy();
@@ -316,6 +353,11 @@ namespace GPF_Final_Assessment
                 obstacles[i].Draw(gameTime, spriteBatch);
             }
 
+            for (int i = 0; i < collectables.Count; i++)
+            {
+                collectables[i].Draw(gameTime, spriteBatch);
+            }
+
 			spriteBatch.End();
 		}
 
@@ -339,13 +381,44 @@ namespace GPF_Final_Assessment
             enemies.Add(e);
         }
 
+        void SpawnCollectable()
+        {
+            float randomX = rand.Next(1150, 1150);
+            float randomY = rand.Next(120, 600);
+            int randType = rand.Next(0, 4);
+            Texture2D randTexture = collectWifiTexture;
+
+            switch (randType)
+            {
+                case 0:
+                    randTexture = collectBikeTexture;
+                    break;
+                case 1:
+                    randTexture = collectPointsTexture;
+                    break;
+                case 2:
+                    randTexture = collectHPSmlTexture;
+                    break;
+                case 3:
+                    randTexture = collectHPLgeTexture;
+                    break;
+                case 4:
+                    randTexture = collectWifiTexture;
+                    break;
+            }
+
+            Collectable c = new Collectable(randTexture, new Vector2(randomX, randomY), defaultSpeed, randType);
+            c.collectScrollSpeed = scrollSpeed;
+            collectables.Add(c);
+        }
+
         void CollisionsWithEnemy()
         {
-            Rectangle playerRect = new Rectangle((int)player.offsetposition.X, (int)player.offsetposition.Y, player.texture.Width, player.texture.Height);
+            Rectangle playerRect = new Rectangle((int)player.playerOffsetPosition.X, (int)player.playerOffsetPosition.Y, player.playerTexture.Width, player.playerTexture.Height);
 
             for (int i = enemies.Count - 1; i >= 0; i--)
             {
-                Rectangle enemiesRect = new Rectangle((int)(enemies[i].enemyoffsetposition.X), (int)(enemies[i].enemyoffsetposition.Y), enemies[i].enemyTexture.Width, enemies[i].enemyTexture.Height);
+                Rectangle enemiesRect = new Rectangle((int)(enemies[i].enemyOffsetPosition.X), (int)(enemies[i].enemyOffsetPosition.Y), enemies[i].enemyTexture.Width, enemies[i].enemyTexture.Height);
                 
                 if (Rectangle.Intersect(playerRect, enemiesRect) != Rectangle.Empty)
                 {
@@ -362,7 +435,7 @@ namespace GPF_Final_Assessment
         {
             Rectangle intersectRect;
 
-            Rectangle playerRect = new Rectangle((int)player.offsetposition.X, (int)player.offsetposition.Y, player.texture.Width, player.texture.Height);
+            Rectangle playerRect = new Rectangle((int)player.playerOffsetPosition.X, (int)player.playerOffsetPosition.Y, player.playerTexture.Width, player.playerTexture.Height);
 
             for (int i = obstacles.Count - 1; i >= 0; i--)
             {
@@ -372,7 +445,7 @@ namespace GPF_Final_Assessment
                 if (intersectRect != Rectangle.Empty)
                 {
                     //we have an intersection...will this cause a problem for the player moving forward (1)? Or just up (2)/down(3)?                    
-				    if (intersectRect.Right == playerRect.Right && intersectRect.Width <= Math.Abs(player.movementSpeed))
+				    if (intersectRect.Right == playerRect.Right && intersectRect.Width <= Math.Abs(player.playerMovementSpeed))
                         return 1;
                     else if(intersectRect.Top == playerRect.Top)
                         return 2;
@@ -396,7 +469,7 @@ namespace GPF_Final_Assessment
                 currHealth = 0.25f;
 
             scrollSpeed = defaultSpeed * currHealth;
-            player.movementSpeed = player.defaultSpeed * currHealth;
+            player.playerMovementSpeed = player.playerDefaultSpeed * currHealth;
             background.backgroundScrollSpeed = scrollSpeed;
 
             for (int i = enemies.Count - 1; i >= 0; i--)
@@ -404,6 +477,9 @@ namespace GPF_Final_Assessment
 
             for (int i = obstacles.Count - 1; i >= 0; i--)
                 obstacles[i].obstacleScrollSpeed = obstacles[i].obstacleDefaultSpeed * currHealth;
+
+            for (int i = collectables.Count - 1; i >= 0; i--)
+                collectables[i].collectScrollSpeed = collectables[i].collectDefaultSpeed * currHealth;
         }
 	}
 }
