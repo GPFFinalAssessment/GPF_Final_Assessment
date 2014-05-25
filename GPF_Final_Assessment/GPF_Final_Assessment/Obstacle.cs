@@ -36,7 +36,7 @@ namespace GPF_Final_Assessment
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(obstacleTexture, obstaclePosition - obstacleOffset, Color.White);
+            spriteBatch.Draw(obstacleTexture, obstacleOffsetPosition, Color.White);
         }
     }
 }

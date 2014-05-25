@@ -34,7 +34,7 @@ namespace GPF_Final_Assessment
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            spriteBatch.Draw(enemyTexture, enemyPosition - enemyOffset, Color.White);
+            spriteBatch.Draw(enemyTexture, enemyOffsetPosition, Color.White);
         }
     }
 }
