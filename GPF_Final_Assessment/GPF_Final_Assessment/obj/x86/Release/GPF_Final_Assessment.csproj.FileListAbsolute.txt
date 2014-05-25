@@ -49,3 +49,5 @@ C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_F
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\wifi_hud.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\hud_sep.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\timer_hud3d.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\Gameguide3.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\points_hud.png

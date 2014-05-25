@@ -161,7 +161,7 @@ namespace GPF_Final_Assessment
             PlayerIconTexture = PlayerIcon1;
             GUI.ButtonBackward = Content.Load<Texture2D>("Buttonbackwards");
             GUI.ButtonForward = Content.Load<Texture2D>("Buttonnext");
-            Gameguide = Content.Load<Texture2D>("Gameguide");
+            Gameguide = Content.Load<Texture2D>("Gameguide2");
 			//=============================================================
 
 			//=============================================================
@@ -506,7 +506,7 @@ namespace GPF_Final_Assessment
 
             spriteBatch.Draw(backTexture, new Rectangle(-200, 0, 2048, 768), Color.White);
 
-            spriteBatch.Draw(Gameguide, new Vector2(0, 0), Color.Red);
+            spriteBatch.Draw(Gameguide, new Vector2(0, 0), Color.White);
 
             GUI.DrawBack(spriteBatch);
 
