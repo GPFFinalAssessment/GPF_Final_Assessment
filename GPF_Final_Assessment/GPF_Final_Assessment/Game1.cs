@@ -21,7 +21,7 @@ namespace GPF_Final_Assessment
 
 		//=============================================================
         //GameState
-        public enum GameState { PAUSE, PLAY, MENU, OPTIONS, HELP }
+        public enum GameState { PAUSE, PLAY, MENU, OPTIONS, HELP, WIN, LOSE }
 		public GameState gameState = GameState.MENU;
 		//=============================================================
 
@@ -38,14 +38,22 @@ namespace GPF_Final_Assessment
         public int PlayerSelect = 1;
         Texture2D clockHud;
         Texture2D pointsHud;
+        bool LostFromWifi;
 		//=============================================================
         
 		//=============================================================
 		//Background.
 		Background background;
-		Texture2D backTexture;
-        float secondsToComplete = 60;
-        float defaultSpeed = 75;
+        Texture2D backTexture;
+        Texture2D backEndTexture;
+        Texture2D EndWinTexture;
+        Texture2D EndWinBackgroundTexture;
+        Texture2D EndLoseTexture;
+        Texture2D EndDiedTexture;
+        Texture2D EndTimeoutTexture;
+        Texture2D PauseTexture;
+        float secondsToComplete = 120;
+        float defaultSpeed = 100;
         float scrollSpeed;
         int TopBoundary = 200;
         int BottomBoundary = 700;
@@ -143,8 +151,15 @@ namespace GPF_Final_Assessment
 
 			//=============================================================
 			//Background Texturing
-			backTexture = Content.Load<Texture2D>("ui_background");
-            background = new Background(backTexture, new Vector2(0, 0), secondsToComplete, scrollSpeed);
+            backTexture = Content.Load<Texture2D>("ui_background");
+            backEndTexture = Content.Load<Texture2D>("ui_background_end");
+            background = new Background(backTexture, backEndTexture, new Vector2(0, 0), secondsToComplete, scrollSpeed);
+            EndWinTexture = Content.Load<Texture2D>("EndingWin");
+            EndWinBackgroundTexture = Content.Load<Texture2D>("EndScreen");
+            EndLoseTexture = Content.Load<Texture2D>("EndingLose");
+            EndDiedTexture = Content.Load<Texture2D>("EndingDied");
+            EndTimeoutTexture = Content.Load<Texture2D>("TimeOut");
+            PauseTexture = Content.Load<Texture2D>("Pause");
 			//=============================================================
 
 			//=============================================================
@@ -179,6 +194,7 @@ namespace GPF_Final_Assessment
             hudSepTexture = Content.Load<Texture2D>("hud_sep");
             clockHud = Content.Load<Texture2D>("timer_hud3d");
             pointsHud = Content.Load<Texture2D>("points_hud");
+            LostFromWifi = false;
 			//=============================================================
 
             //=============================================================
@@ -233,7 +249,7 @@ namespace GPF_Final_Assessment
 		/// <param name="gameTime">Provides a snapshot of timing values.</param>
 		protected override void Update(GameTime gameTime)
 		{
-			if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
+            if (GamePad.GetState(PlayerIndex.One).Buttons.Back == ButtonState.Pressed || Keyboard.GetState().IsKeyDown(Keys.Escape))
 				Exit();
 
             // TODO: Add your update logic here
@@ -242,7 +258,7 @@ namespace GPF_Final_Assessment
 			//Gamestate Update
 			switch (gameState)
 			{
-			    case GameState.PAUSE:
+                case GameState.PAUSE:
 				    PauseUpdate(gameTime);
 				    break;
                 case GameState.MENU:
@@ -255,9 +271,33 @@ namespace GPF_Final_Assessment
                 case GameState.HELP:
                     HelpUpdate(gameTime);
                     break;
+                case GameState.WIN:
+                    WinUpdate(gameTime);
+                    break;
+                case GameState.LOSE:
+                    LoseUpdate(gameTime);
+                    break;
                 default:
                     TimerBegin += (float)gameTime.ElapsedGameTime.TotalSeconds;
-				    PlayUpdate(gameTime);
+                    
+                    //check if we continue
+                    if (!player.isAlive() || TimerBegin >= secondsToComplete)
+                        gameState = GameState.LOSE;
+                    else if (background.IsEnd())
+                    {
+                        if (player.playerWifi >= player.playerWifiNeeded)
+                        {
+                            gameState = GameState.WIN;
+                            WinUpdate(gameTime);
+                        }
+                        else
+                        {
+                            LostFromWifi = true;
+                            gameState = GameState.LOSE;
+                        }
+                    }
+                    else
+                        PlayUpdate(gameTime);
 				    break;
 			}
 			//=============================================================
@@ -269,8 +309,10 @@ namespace GPF_Final_Assessment
 		//Paused Game State Update
 		public void PauseUpdate(GameTime gameTime)
 		{
-			if (Keyboard.GetState().IsKeyDown(Keys.Space))
-				gameState = GameState.PLAY;
+            if (Keyboard.GetState().IsKeyDown(Keys.Enter))
+                gameState = GameState.PLAY;
+            else if (Keyboard.GetState().IsKeyDown(Keys.Back))
+                gameState = GameState.MENU;
 		}
 		//=============================================================
 
@@ -289,7 +331,7 @@ namespace GPF_Final_Assessment
         //=============================================================
         //Help Game State Update
         public void OptionsUpdate(GameTime gameTime)
-        {            
+        {
             GUI.UpdateCollisionNavigation(gameTime);
 
             switch (PlayerSelect)
@@ -330,12 +372,35 @@ namespace GPF_Final_Assessment
         //=============================================================
 
 
+        //=============================================================
+        //Win Game State Update
+        public void WinUpdate(GameTime gameTime)
+        {
+            background.backgroundEndTexture = EndWinBackgroundTexture;
+            background.backgroundTexture = EndWinBackgroundTexture;
+            background.backgroundPosition = new Vector2(0, 0);
+        }
+
+        //=============================================================
+
+        //=============================================================
+        //Lose Game State Update
+        public void LoseUpdate(GameTime gameTime)
+        {
+            //do nothing
+        }
+
+        //=============================================================
+
+
 		//=============================================================
 		//InGame Game state Update
 		public void PlayUpdate(GameTime gameTime)
 		{
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 gameState = GameState.PAUSE;
+            else if (Keyboard.GetState().IsKeyDown(Keys.Escape))
+                Exit();
             else
             {
                 if (highSpeed)
@@ -350,8 +415,7 @@ namespace GPF_Final_Assessment
 
                 int intHaltMovement = CollisionWithObstacles();
 
-                if (!background.IsEnd())
-                    player.Update(gameTime, graphics, intHaltMovement);
+                player.Update(gameTime, graphics, intHaltMovement);
 
                 if (intHaltMovement != 1)
                 {
@@ -410,7 +474,6 @@ namespace GPF_Final_Assessment
                     CollisionsWithCollectables(gameTime);
                 }
             }
-
 		}
 		//=============================================================
 
@@ -427,7 +490,8 @@ namespace GPF_Final_Assessment
 			//=============================================================
 			//Gamestate Update
 			switch (gameState) {
-			    case GameState.PAUSE:
+                case GameState.PAUSE:
+                    PlayDraw(gameTime);
 				    PauseDraw(gameTime);
 				    break;
 			    case GameState.MENU:
@@ -438,6 +502,14 @@ namespace GPF_Final_Assessment
                     break;
                 case GameState.HELP:
                     HelpDraw(gameTime);
+                    break;
+                case GameState.WIN:
+                    PlayDraw(gameTime);
+                    WinDraw(gameTime);
+                    break;
+                case GameState.LOSE:
+                    PlayDraw(gameTime);
+                    LoseDraw(gameTime);
                     break;
 			    default:
 				    PlayDraw (gameTime);
@@ -471,14 +543,51 @@ namespace GPF_Final_Assessment
         //Pause Game State Update
         public void PauseDraw(GameTime gameTime)
 		{
-			spriteBatch.Begin ();
-
-
+            spriteBatch.Begin();
+            spriteBatch.Draw(PauseTexture, new Vector2(0,0), Color.White);
 			spriteBatch.End();
 		}
 		//=============================================================
 
+        //=============================================================
+        //Win Game State Update
+        public void WinDraw(GameTime gameTime)
+        {
+            spriteBatch.Begin();
 
+            Vector2 drawPos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            drawPos = drawPos - new Vector2(EndWinTexture.Width / 2, EndWinTexture.Height / 2);
+            spriteBatch.Draw(EndWinTexture, drawPos, Color.White);
+
+            spriteBatch.End();
+        }
+        //=============================================================
+
+
+        //=============================================================
+        //Lose Game State Update
+        public void LoseDraw(GameTime gameTime)
+        {
+            spriteBatch.Begin();
+
+            //if LostFromWifi then we want to tell them they lost because they didn't collect enough wifi!      
+            //otherwise tell them they lost (health, time ran out etc)
+            Texture2D EndTexture;
+
+            if (!player.isAlive())
+                EndTexture = EndDiedTexture;
+            else if (LostFromWifi)
+                EndTexture = EndLoseTexture;
+            else
+                EndTexture = EndTimeoutTexture;
+       
+            Vector2 drawPos = new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2);
+            drawPos = drawPos - new Vector2(EndTexture.Width / 2, EndTexture.Height / 2);
+            spriteBatch.Draw(EndTexture, drawPos, Color.White);
+
+            spriteBatch.End();
+        }
+        //=============================================================
 
         //=============================================================
         //Options Game State Update
@@ -531,19 +640,22 @@ namespace GPF_Final_Assessment
             //Draw HUD
             DrawHUD();
 
-            for (int i = 0; i < enemies.Count; i++)
+            if (gameState == GameState.PLAY || gameState == GameState.PAUSE)
             {
-                enemies[i].Draw(gameTime, spriteBatch);
-            }
+                for (int i = 0; i < enemies.Count; i++)
+                {
+                    enemies[i].Draw(gameTime, spriteBatch);
+                }
 
-            for (int i = 0; i < obstacles.Count; i++)
-            {
-                obstacles[i].Draw(gameTime, spriteBatch);
-            }
+                for (int i = 0; i < obstacles.Count; i++)
+                {
+                    obstacles[i].Draw(gameTime, spriteBatch);
+                }
 
-            for (int i = 0; i < collectables.Count; i++)
-            {
-                collectables[i].Draw(gameTime, spriteBatch);
+                for (int i = 0; i < collectables.Count; i++)
+                {
+                    collectables[i].Draw(gameTime, spriteBatch);
+                }
             }
 
 			spriteBatch.End();
@@ -640,9 +752,9 @@ namespace GPF_Final_Assessment
                 
                 if (Rectangle.Intersect(playerRect, enemiesRect) != Rectangle.Empty)
                 {
-                    //this should have hurt our player...take away 5 points
+                    //this should have hurt our player...take away health points
                     enemies.RemoveAt(i);
-                    player.UpdateHealth(10, false);
+                    player.UpdateHealth(20, false);
                     break;
                 }
             }
@@ -691,7 +803,7 @@ namespace GPF_Final_Assessment
                     switch (collectables[i].collectType)
                     {
                         case Collectable.CollectType.BIKE:
-                            speedTimer = new Timer(0, 5);
+                            speedTimer = new Timer(0, 10);
                             highSpeed = true;
                             break;
                         case Collectable.CollectType.HPLGE:                           
@@ -760,14 +872,15 @@ namespace GPF_Final_Assessment
 
             if (highSpeed)
             {
-                //special case, treat them like they are at 250% health!
-                currHealth = 2.5f;
+                //special case, treat them like they are at 200% health!
+                currHealth = 2f;
             }
             else
             {
-                //but don't make them go less than 25% speed
-                if (currHealth < 0.25)
-                    currHealth = 0.25f;
+                //but we only want to decrease their speed a bit...
+                currHealth = 1 - ((1 - currHealth) / 2);
+                if (currHealth < 0.5)
+                    currHealth = 0.5f;
             }
 
             scrollSpeed = defaultSpeed * currHealth;
@@ -828,9 +941,9 @@ namespace GPF_Final_Assessment
             spriteBatch.Draw(wifiHudTexture, new Vector2(intScorePosX, intScorePosY), Color.White);
             intScorePosX += wifiHudTexture.Width + 5;
 
-            Color colWifi = Color.White;
+            Color colWifi = Color.Red;
             if (player.playerWifi >= player.playerWifiNeeded)
-                colWifi = Color.PaleGreen;
+                colWifi = Color.White;
             char[] WifiValues = player.playerWifi.ToString().ToCharArray();
             foreach (char w in WifiValues)
             {
@@ -853,6 +966,24 @@ namespace GPF_Final_Assessment
                 //draw each char after the other
                 spriteBatch.Draw(scoreTextures[intChar], new Vector2(intScorePosX, intScorePosY), Color.White);
                 intScorePosX += scoreTextures[intChar].Width;
+            }
+
+            //draw speed timer
+            if (!speedTimer.TimerEnd)
+            {
+                intScorePosX = graphics.PreferredBackBufferWidth - (collectBikeTexture.Width + 100);
+                spriteBatch.Draw(collectBikeTexture, new Vector2(intScorePosX, 20), Color.White);
+                intScorePosX += collectBikeTexture.Width + 5;
+
+                char[] SpeedValues = ((int)(speedTimer.TimerMax - speedTimer.TimerElapsed)).ToString("00").ToCharArray();
+                foreach (char sv in SpeedValues)
+                {
+                    int intChar = Convert.ToInt16(sv.ToString());
+
+                    //draw each char after the other
+                    spriteBatch.Draw(scoreTextures[intChar], new Vector2(intScorePosX, 20), Color.Red);
+                    intScorePosX += scoreTextures[intChar].Width;
+                }
             }
         }
 
