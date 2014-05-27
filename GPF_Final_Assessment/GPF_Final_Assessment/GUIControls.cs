@@ -75,6 +75,7 @@ namespace GPF_Final_Assessment
                 if (stateMouse.LeftButton == ButtonState.Pressed)
                 {
                     game.gameState = Game1.GameState.PLAY;
+                    game.ResetGameValues();
                     game.TimerBegin = 0;
                 }
 			}

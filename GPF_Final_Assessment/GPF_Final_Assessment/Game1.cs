@@ -79,27 +79,27 @@ namespace GPF_Final_Assessment
         Texture2D[] scoreTextures = new Texture2D[10];
         Texture2D hudSepTexture;
         int WifiNeeded = 5;
-        bool highSpeed = false;
+        bool highSpeed;
 		//=============================================================
         
         //=============================================================
         //Enemies and Obstacles
         Texture2D enemyTexture;
         Texture2D obstacleTexture;
-        List<Enemy> enemies = new List<Enemy>();
-        List<Obstacle> obstacles = new List<Obstacle>();
-        float enemyspawntime = 5.0f;
-        float enemyspawncooldown = 0.0f;
-        float obstaclespawntime = 12.0f;
-        float obstaclespawncooldown = 0.0f;
+        List<Enemy> enemies;
+        List<Obstacle> obstacles;
+        float enemyspawntime;
+        float enemyspawncooldown;
+        float obstaclespawntime;
+        float obstaclespawncooldown;
         Random rand = new Random();
         //=============================================================
 
         
         //=============================================================
         //Collectables
-        List<Collectable> collectables = new List<Collectable>();
-        List<CollectableSpawnDetail> collectableSpawns = new List<CollectableSpawnDetail>();
+        List<Collectable> collectables;
+        List<CollectableSpawnDetail> collectableSpawns;
         Texture2D collectWifiTexture;
         Texture2D collectPointsTexture;
         Texture2D collectHPLgeTexture;
@@ -132,7 +132,7 @@ namespace GPF_Final_Assessment
 			// TODO: Add your initialization logic here
 
 			//GuiControls
-			GUI = new GUIControls(this);
+            GUI = new GUIControls(this);
 
 			base.Initialize();
 		}
@@ -153,7 +153,6 @@ namespace GPF_Final_Assessment
 			//Background Texturing
             backTexture = Content.Load<Texture2D>("ui_background");
             backEndTexture = Content.Load<Texture2D>("ui_background_end");
-            background = new Background(backTexture, backEndTexture, new Vector2(0, 0), secondsToComplete, scrollSpeed);
             EndWinTexture = Content.Load<Texture2D>("EndingWin");
             EndWinBackgroundTexture = Content.Load<Texture2D>("EndScreen");
             EndLoseTexture = Content.Load<Texture2D>("EndingLose");
@@ -173,7 +172,6 @@ namespace GPF_Final_Assessment
             PlayerIcon2 = Content.Load<Texture2D>("PlayerIcon2");
             PlayerIcon3 = Content.Load<Texture2D>("PlayerIcon3");
             PlayerIcon4 = Content.Load<Texture2D>("PlayerIcon4");
-            PlayerIconTexture = PlayerIcon1;
             GUI.ButtonBackward = Content.Load<Texture2D>("Buttonbackwards");
             GUI.ButtonForward = Content.Load<Texture2D>("Buttonnext");
             Gameguide = Content.Load<Texture2D>("Gameguide2");
@@ -185,8 +183,6 @@ namespace GPF_Final_Assessment
             playerTexture2 = Content.Load<Texture2D>("player_blue");
             playerTexture3 = Content.Load<Texture2D>("player_red");
             playerTexture4 = Content.Load<Texture2D>("player_yellow");
-            playerTexture = playerTexture1;
-			player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), WifiNeeded);
             healthTexture = Content.Load<Texture2D>("health");
             wifiHudTexture = Content.Load<Texture2D>("wifi_hud");
             for (var i = 0; i < 10; i++)
@@ -194,7 +190,10 @@ namespace GPF_Final_Assessment
             hudSepTexture = Content.Load<Texture2D>("hud_sep");
             clockHud = Content.Load<Texture2D>("timer_hud3d");
             pointsHud = Content.Load<Texture2D>("points_hud");
-            LostFromWifi = false;
+            PlayerIconTexture = PlayerIcon1;
+            playerTexture = playerTexture1;
+            player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), WifiNeeded);
+           
 			//=============================================================
 
             //=============================================================
@@ -211,6 +210,33 @@ namespace GPF_Final_Assessment
             collectHPSmlTexture = Content.Load<Texture2D>("coffee32");
             collectBikeTexture = Content.Load<Texture2D>("bike");
 
+            //=============================================================
+
+		}
+
+        public void ResetGameValues()
+        {
+            //basics
+            TimerBegin = 0;
+            highSpeed = false;
+
+            //background
+            background = new Background(backTexture, backEndTexture, new Vector2(0, 0), secondsToComplete, scrollSpeed);
+
+            //player
+            player = new Player(playerTexture, new Vector2(graphics.PreferredBackBufferWidth / 2, graphics.PreferredBackBufferHeight / 2), WifiNeeded);
+           
+            LostFromWifi = false;
+
+            //collectables, enemies, obstacles
+            enemies = new List<Enemy>();
+            obstacles = new List<Obstacle>();
+            collectables = new List<Collectable>();
+            collectableSpawns = new List<CollectableSpawnDetail>();
+            enemyspawntime = 5.0f;
+            enemyspawncooldown = 0.0f;
+            obstaclespawntime = 12.0f;
+            obstaclespawncooldown = 0.0f;
             AddSpawnCollectables(Collectable.CollectType.WIFI, collectWifiSpawnCount);
             AddSpawnCollectables(Collectable.CollectType.POINTS, collectPointsSpawnCount);
             AddSpawnCollectables(Collectable.CollectType.HPSML, collectHPSmlSpawnCount);
@@ -218,13 +244,11 @@ namespace GPF_Final_Assessment
             AddSpawnCollectables(Collectable.CollectType.BIKE, collectBikeSpawnCount);
 
             //=============================================================
-
-            //=============================================================
             //Timer
             speedTimer = new Timer(0, 0); //create a speed timer but don't leave it active
             speedTimer.TimerEnd = true;
             //=============================================================
-		}
+        }
 
         public void AddSpawnCollectables(Collectable.CollectType SpawnType, int SpawnCount)
         {
@@ -321,7 +345,7 @@ namespace GPF_Final_Assessment
 		//Menu Game State Update
         public void MenuUpdate(GameTime gameTime)
         {
-            if (TimerBegin >= 0.5) 
+            if (TimerBegin >= 0.5)
                 GUI.UpdateCollision(gameTime);
 		}
 
@@ -338,22 +362,23 @@ namespace GPF_Final_Assessment
             {
                 case 1:
                     PlayerIconTexture = PlayerIcon2;
-                    player.playerTexture = playerTexture2;
+                    playerTexture = playerTexture2;
                     break;
                 case 2:
                     PlayerIconTexture = PlayerIcon3;
-                    player.playerTexture = playerTexture3;
+                    playerTexture = playerTexture3;
                     break;
                 case 3:
                     PlayerIconTexture = PlayerIcon4;
-                    player.playerTexture = playerTexture4;
+                    playerTexture = playerTexture4;
                     break;
                 default:
                     PlayerIconTexture = PlayerIcon1;
-                    player.playerTexture = playerTexture1;
+                    playerTexture = playerTexture1;
                     break;
             }
 
+            player.playerTexture = playerTexture;
             GUI.UpdateCollisionBack(gameTime);
             TimerBegin = 0;
         }
@@ -376,6 +401,9 @@ namespace GPF_Final_Assessment
         //Win Game State Update
         public void WinUpdate(GameTime gameTime)
         {
+            if (Keyboard.GetState().IsKeyDown(Keys.Back))
+                gameState = GameState.MENU;
+
             background.backgroundEndTexture = EndWinBackgroundTexture;
             background.backgroundTexture = EndWinBackgroundTexture;
             background.backgroundPosition = new Vector2(0, 0);
@@ -388,6 +416,8 @@ namespace GPF_Final_Assessment
         public void LoseUpdate(GameTime gameTime)
         {
             //do nothing
+            if (Keyboard.GetState().IsKeyDown(Keys.Back))
+                gameState = GameState.MENU;
         }
 
         //=============================================================
@@ -399,6 +429,8 @@ namespace GPF_Final_Assessment
 		{
             if (Keyboard.GetState().IsKeyDown(Keys.Space))
                 gameState = GameState.PAUSE;
+            else if (Keyboard.GetState().IsKeyDown(Keys.Back))
+                gameState = GameState.MENU;
             else if (Keyboard.GetState().IsKeyDown(Keys.Escape))
                 Exit();
             else
