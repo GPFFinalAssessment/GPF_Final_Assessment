@@ -53,3 +53,9 @@ C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_F
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\points_hud.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\Gameguide2.png
 C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\ui_background_end.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\EndingDied.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\EndingLose.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\EndingWin.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\EndScreen.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\Pause.png
+C:\Users\XC7846\Documents\GitHub\GPF_Final_Assessment\GPF_Final_Assessment\GPF_Final_Assessment\bin\WindowsGL\Release\Content\TimeOut.png
